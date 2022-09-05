@@ -1,0 +1,110 @@
+﻿
+Use these scripts to set up Vim for ARM assembly and C programming on a
+Raspberry Pi virtual machine
+
+
+Prerequisites
+-------------
+
+* Debian or Ubuntu distro
+* docker CLI: https://docs.docker.com/engine/install
+* rsync
+* unzip
+* xz-utils
+
+
+Setting Up
+----------
+
+To configure the virtual machine's startup parameters, create a '.env' file in
+the root directory.
+
+Options
+~~~~~~~
+
+    OS_VERSION      Raspberry Pi OS version string
+                    Default: 2022-01-28-raspios-bullseye-armhf-lite
+
+    OS_IMAGE_URL    URL where ${OS_VERSION} is hosted
+                    Default: https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2022-01-28
+
+    SSH_HOST        user and host name of the RPi's SSH server
+                    Default: pi@localhost
+
+    SSH_PORT        port number the RPi's SSH server is listening on
+                    Default: 5022
+
+    SSH_PASSWORD    login password for ${SSH_HOST}
+                    Default: *none*
+
+    SSH_PARAMS      additional options for the 'ssh' client
+                    Default: *none*
+
+    WORK_DIR        directory on the RPi where source files will be copied
+                    Default: ~
+
+For example:
+
+    OS_VERSION='2022-04-04-raspios-buster-armhf-lite'
+    OS_IMAGE_URL='https://downloads.raspberrypi.org/raspios_oldstable_lite_armhf/images/raspios_oldstable_lite_armhf-2022-04-07'
+    SSH_PARAMS='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+    WORK_DIR='~/assembly-source'
+
+Start the RPi OS in a Docker container:
+
+    sh boot.sh
+
+
+Build Environment
+-----------------
+
+Source files are copied to the RPi over a secure shell and compiled with the
+native GCC toolchain. If the SSH server is not already enabled on the RPi, log
+in and run:
+
+    sudo raspi-config
+
+Select:
+
+    Interface Options : Configure connections to peripherals
+
+then:
+
+    SSH : Enable/disable remote command line access using SSH
+
+When prompted, select Yes > Ok > Finish
+
+Open a fresh terminal on the host OS and try the connection:
+
+    ssh -T pi@localhost -p ${SSH_PORT} "uname -a"
+
+Then run:
+
+    sh setup.sh
+
+Enter the RPi user password when prompted.
+
+*NOTE*
+The default 'pi' user was removed in the 2022-04-04 Bullseye release.
+See https://downloads.raspberrypi.org/raspios_lite_armhf/release_notes.txt
+
+
+Vim Integration
+---------------
+
+Start Vim:
+
+    sh ide.sh
+
+The following commands will be available:
+
+:RPiRun          <F7>  Execute the active file on the RPi
+:RPiCompile      <F8>  Copy the active file to the RPi and compile it
+:RPiCompile all  <F9>  Copy and compile the active file, then compile and link
+                       all source files in the same directory
+
+
+Acknowledgements
+----------------
+
+lukechilds/dockerpi (c) Luke Childs, MIT License, https://github.com/lukechilds/dockerpi

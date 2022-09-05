@@ -1,0 +1,11 @@
+*~
+.*~
+.*.un~
+.*.swp
+*.bc
+*.dtb
+*.env
+*.img
+*.o
+*.xz
+*.zip

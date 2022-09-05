@@ -1,0 +1,3 @@
+#!/bin/sh
+OBJ="${1%.s}.o"
+as --gstabs -o "$OBJ" "$1"
