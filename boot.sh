@@ -23,7 +23,7 @@ no_builtin_user() {
 if ! [ -f "$IMG.img" ]; then
   HAS_BUILTIN_USER=$(echo "$IMG" \
                     | awk '{ split($0,a,"-");
-                             if (a[1] >= 2022 && a[2] >= 4) print "false";
+                             if (a[1] > 2022 || (a[1] == 2022 && a[2] >= 4)) print "false";
                              else print "true"; }')
 
   echo Fetching "$IMG" . . .
