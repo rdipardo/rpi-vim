@@ -9,7 +9,11 @@ let g:rpi_vim_dev_loaded = 1
 if !exists(':RPiCompile')
   com! -nargs=* RPiCompile :call rpi#Compile(<f-args>)
   nnoremap <F8> :RPiCompile<CR>
-  nnoremap <F9> :exe 'RPiCompile all'<CR>
+endif
+
+if !exists(':RPiMake')
+  com! RPiMake exec 'RPiCompile all'
+  nnoremap <F9> :RPiMake<CR>
 endif
 
 if !exists(':RPiRun')

@@ -3,6 +3,7 @@
 .*.un~
 .*.swp
 *.bc
+*.cflags
 *.dtb
 *.env
 *.img

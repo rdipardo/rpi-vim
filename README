@@ -55,6 +55,19 @@ Start the RPi OS in a Docker container:
     sh boot.sh
 
 
+Compiler Flags
+~~~~~~~~~~~~~~
+
+Create a '.cflags' file in the root directory. Any CFLAGS, CXXFLAGS or LDFLAGS
+variable defined here will be passed to the VM's compiler.
+
+For example:
+
+    CFLAGS='-I/opt/vc/include -std=c11'
+    CXXFLAGS='-std=gnu++2b'
+    LDFLAGS='-L/opt/vc/lib -lbcm_host'
+
+
 Build Environment
 -----------------
 
@@ -100,7 +113,7 @@ The following commands will be available:
 
 :RPiRun          <F7>  Execute the active file on the RPi
 :RPiCompile      <F8>  Copy the active file to the RPi and compile it
-:RPiCompile all  <F9>  Copy and compile the active file, then compile and link
+:RPiMake         <F9>  Copy and compile the active file, then compile and link
                        all source files in the same directory
 
 

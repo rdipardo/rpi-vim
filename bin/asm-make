@@ -4,4 +4,4 @@ find . -type f -name \*.s -print \
 | xargs -I% "$(dirname "$0")/asm" %
 find . -type f \( -name \*.c -o -name \*.cxx -o -name \*.cpp \) -print \
 | xargs -I% "$(dirname "$0")/asm-cc" %
-gcc -o "${1%%.*}" ./*.o
+gcc -o "${1%%.*}" ./*.o $LDFLAGS
