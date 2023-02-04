@@ -1,7 +1,6 @@
 #!/bin/sh -e
-# shellcheck disable=SC2038
-find . -type f -name \*.s -print \
-| xargs -I% "$(dirname "$0")/asm" %
-find . -type f \( -name \*.c -o -name \*.cxx -o -name \*.cpp \) -print \
-| xargs -I% "$(dirname "$0")/asm-cc" %
+find . -type f -name \*.s -print0 \
+| xargs -P4 -0I% "$(dirname "$0")/asm" %
+find . -type f \( -name \*.c -o -name \*.cxx -o -name \*.cpp \) -print0 \
+| xargs -P4 -0I% "$(dirname "$0")/asm-cc" %
 gcc -o "${1%%.*}" ./*.o $LDFLAGS
