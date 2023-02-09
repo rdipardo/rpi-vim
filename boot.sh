@@ -3,11 +3,11 @@ set -e
 [ -f .env ] && eval "$(cat .env)"
 [ "$OS_IMAGE_URL" ] && \
   IMG_URL="$OS_IMAGE_URL" || \
-  IMG_URL='https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2022-01-28'
+  IMG_URL='https://downloads.raspberrypi.org/raspios_lite_arm64/images/raspios_lite_arm64-2022-01-28'
 
 [ "$OS_VERSION" ] && \
   IMG="$OS_VERSION" || \
-  IMG='2022-01-28-raspios-bullseye-armhf-lite'
+  IMG='2022-01-28-raspios-bullseye-arm64-lite'
 
 no_builtin_user() {
   echo
@@ -46,4 +46,4 @@ docker run \
   -it \
   --net=host \
   -v "$(pwd)/$IMG.img":/sdcard/filesystem.img \
-  lukechilds/dockerpi:vm
+  lukechilds/dockerpi:vm pi3

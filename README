@@ -23,10 +23,10 @@ Options
 ~~~~~~~
 
     OS_VERSION      Raspberry Pi OS version string
-                    Default: 2022-01-28-raspios-bullseye-armhf-lite
+                    Default: 2022-01-28-raspios-bullseye-arm64-lite
 
     OS_IMAGE_URL    URL where ${OS_VERSION} is hosted
-                    Default: https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2022-01-28
+                    Default: https://downloads.raspberrypi.org/raspios_lite_arm64/images/raspios_lite_arm64-2022-01-28
 
     SSH_HOST        user and host name of the RPi's SSH server
                     Default: pi@localhost
