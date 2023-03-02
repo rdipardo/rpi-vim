@@ -12,7 +12,7 @@ if !exists(':RPiCompile')
 endif
 
 if !exists(':RPiMake')
-  com! RPiMake exec 'RPiCompile all'
+  com! -nargs=* RPiMake :call rpi#Compile('all', <f-args>)
   nnoremap <F9> :RPiMake<CR>
 endif
 

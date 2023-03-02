@@ -19,7 +19,7 @@ func! rpi#Compile(...) abort
     \ 'sh ' .
     \ expand('<sfile>:p:h') . '/plugin/sh/src-asm.sh ' .
     \ expand('%:p') . ' ' .
-    \ get(a:, 1, '')
+    \ join(a:000)
 
   if has('channel')
     let job = job_start(cmd, s:job_options)
