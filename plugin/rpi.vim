@@ -1,6 +1,6 @@
 "" ==========================================================================
 ""    Maintainer: Robert Di Pardo <dipardo.r@gmail.com>
-""    License:    https://github.com/rdipardo/rpi-vim-dev/blob/main/LICENSE
+""    License:    https://github.com/rdipardo/rpi-vim/blob/main/LICENSE
 "" ==========================================================================
 
 if get(g:, 'rpi_vim_dev_loaded') | finish | endif
@@ -19,4 +19,12 @@ endif
 if !exists(':RPiRun')
   com! RPiRun :call rpi#Run()
   nnoremap <F7> :RPiRun<CR>
+endif
+
+if !exists(':RPiSetup')
+  com! -nargs=* RPiSetup :call rpi#Init('setup', <f-args>)
+endif
+
+if !exists(':RPiBoot')
+  com! -nargs=* RPiBoot :call rpi#Init('boot', <f-args>)
 endif
