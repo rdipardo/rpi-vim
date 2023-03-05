@@ -1,0 +1,235 @@
+*rpi.txt*                         Vim integration for emulated Raspberry Pis
+
+                    ,dkOOKXXOOOdc.   'lxOOKXXKOko,
+                    cXMWNXXNWMWOO;  ;KMMWNXXNWMNcl
+                    .xWMMNXOOOOKXc  cKKOOOOXNMMWk'
+                     ..XWMMMNOc'     .:kNMMMMNx'
+                       'cxOOxc.  ... .:xOOOk.,
+                       .,cdl..:dOOOOOOkl'.dc'
+                      :ONNO:.:KMMMMMMWk,:OONNk;
+                     ;OOXx:oo',:loddoool;',cxXO,
+                     .;..ckKNXOO..  .cOONNKx:,;.
+                   '.c..xWMMMMMWd. ;KMMMMMMMX:.cd,
+                  ;KMO':XMMMMMMWd. ,OOMMMMMMMx;OMK:
+                  oWMk.'OWMMMMNd.   ;ONMMMMXc.xWxWo
+                  ;KK:  ocdxdolodxxdolclooc'  :OOO,
+                   .,;cc'.  .cKWMMMMMWk'  .;dxkxd:.
+                    .OMMNk; .OMMMMMMMMW. ;OWMMMMX:
+                    .xWMMMXl lXMMMMMMWOO cXMMMMK;         _
+                     .dXWMMO. 'lxkkkdc .kMMMWO;    _   __( )___ ___
+                       'coo;oo,:loool:'o;ool;o    | | / / / __ `__ \
+                            olXWMMMMMMMNko      _ | |/ / / / / / / /
+                                               (.)|___/_/_/ /_/ /_/
+
+Maintainer: Robert Di Pardo <dipardo.r@gmail.com>
+License:    https://github.com/rdipardo/rpi-vim/blob/main/LICENSE
+
+==============================================================================
+CONTENTS                                                 *rpi-contents*
+
+    Requirements ................................... |rpi-requirements|
+    Installation ................................... |rpi-installation|
+      * Manual ................................ |rpi-vim8-pack-install|
+      * Via Plugin Manager ...................... |rpi-managed-install|
+    Configuration ......................................... |rpi-setup|
+      * Options .................................. |rpi-config-options|
+      * Compiler Flags ............................ |rpi-config-cflags|
+    Commands ........................................... |rpi-commands|
+    References  ............................................ |rpi-refs|
+    Acknowledgements ................................... |rpi-3rdparty|
+
+==============================================================================
+REQUIREMENTS                                              *rpi-requirements*
+
+* Debian or Ubuntu distro
+* docker CLI: https://docs.docker.com/engine/install
+* rsync
+* unzip
+* xz-utils
+
+==============================================================================
+INSTALLATION                                              *rpi-installation*
+
+Manual                                               *rpi-vim8-pack-install*
+~~~~~~
+
+Using Vim 8 or newer, copy the plugin source tree into Vim's |packages| path,
+for example:
+
+  $ mkdir -p ~/.vim/pack/plugins/start
+  $ git clone https://github.com/rdipardo/rpi-vim.git ~/.vim/pack/plugins/start/rpi-vim
+
+
+Via Plugin Manager                                     *rpi-managed-install*
+~~~~~~~~~~~~~~~~~~
+
+Using |vim-plug|:
+
+  $ curl -sfLo  ~/.vim/autoload/plug.vim --create-dirs \
+      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+Edit your '.vimrc' by adding:
+>
+    call plug#begin('~/path/to/your/plugin/directory/')
+    " ...
+    Plug 'rdipardo/rpi-vim'
+    " ...
+    call plug#end()
+<
+
+Start Vim and run the |:PlugInstall| command.
+
+Using |Vundle.vim|:
+
+  $ git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+
+Edit your '.vimrc' by adding:
+>
+    set rtp+=~/.vim/bundle/Vundle.vim
+    call vundle#begin()
+    " ...
+    Plugin 'rdipardo/rpi-vim'
+    " ...
+    call vundle#end()
+<
+
+Start Vim and run the |:VundleInstall!| command.
+
+==============================================================================
+CONFIGURATION                                                    *rpi-setup*
+
+Source files are copied to the RPi over a secure shell and compiled with the
+native GCC toolchain. If the SSH server is not already enabled on the RPi, log
+in and run:
+
+    $ sudo raspi-config
+
+Select 'Interface Options' > 'Configure connections to peripherals', then
+'SSH' > 'Enable/disable remote command line access using SSH'.
+
+When prompted, select 'Yes' > 'Ok' > 'Finish'.
+
+Open a fresh terminal on the host OS and try the connection:
+
+    $ ssh -T |SSH_HOST| -p |SSH_PORT| "uname -a"
+
+Start vim and run the |:RPiSetup| command. Enter the RPi user password when
+prompted.
+
+NOTE
+The default 'pi' user was removed in the 2022-04-04 Bullseye release.
+See https://downloads.raspberrypi.org/raspios_lite_armhf/release_notes.txt
+
+Options                                                 *rpi-config-options*
+~~~~~~~
+
+To configure the virtual machine's startup parameters, create a '.env' file in
+the root of your project's source directory.
+
+                                                                *OS_VERSION*
+  Raspberry Pi OS version string
+  Default: '2022-01-28-raspios-bullseye-arm64-lite'
+
+                                                              *OS_IMAGE_URL*
+  URL where |OS_VERSION| is hosted
+  Default: 'https://downloads.raspberrypi.org/raspios_lite_arm64/images/raspios_lite_arm64-2022-01-28'
+
+                                                                  *SSH_HOST*
+  User and host name of the RPi's SSH server
+  Default: 'pi@localhost'
+
+                                                                  *SSH_PORT*
+  Port number the RPi's SSH server is listening on
+  Default: 5022
+                                                              *SSH_PASSWORD*
+  Login password for |SSH_HOST|
+  Default: ''
+
+                                                                *SSH_PARAMS*
+  Additional options for the ssh client
+  Default: ''
+
+                                                                  *WORK_DIR*
+  Directory on the RPi where source files will be copied
+  Default: '~'
+
+For example:
+>
+  OS_VERSION='2022-04-04-raspios-buster-armhf-lite'
+  OS_IMAGE_URL='https://downloads.raspberrypi.org/raspios_oldstable_lite_armhf/images/raspios_oldstable_lite_armhf-2022-04-07'
+  SSH_PARAMS='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+  WORK_DIR='~/assembly-source'
+<
+
+Compiler Flags                                           *rpi-config-cflags*
+~~~~~~~~~~~~~~
+
+Create a '.cflags' file in the root of your project's source directory.
+Any *CFLAGS* , *CXXFLAGS* or *LDFLAGS* variable defined here will be passed to
+the VM's compiler.
+
+For example:
+>
+  CFLAGS='-I/opt/vc/include -std=c11'
+  CXXFLAGS='-std=gnu++2b'
+  LDFLAGS='-L/opt/vc/lib -lbcm_host'
+<
+==============================================================================
+COMMANDS                                                      *rpi-commands*
+
+                                                               *:RPiCompile*
+        :RPiCompile
+        Default mapping: {Normal}<F8>
+
+Copy the active buffer to the RPi VM and compile it.
+
+                                                                  *:RPiMake*
+        :RPiMake [{target}]
+        Default mapping: {Normal}<F9>
+
+If the working directory contains a Makefile, copy all source files to the RPi
+VM and run `make` with the given {target}, if any.
+
+If no Makefile exits, copy, compile and link all source files using the
+|CFLAGS|, |CXXFLAGS| and |LDFLAGS| variables in the user's '.cflags' file.
+
+                                                                   *:RPiRun*
+        :RPiRun
+        Default mapping: {Normal}<F7>
+
+Execute the active buffer on the RPi VM.
+
+                                                                 *:RPiSetup*
+        :RPiSetup  [{key_file_path}] [{key_file_password}]
+
+Create a new SSH key file at {key_file_path} with {key_file_password} and copy
+it to the RPi VM at |SSH_HOST|. Also copy the plugin's required build scripts
+after a successful connection is made. All parameters are optional.
+
+                                                                  *:RPiBoot*
+        :RPiBoot  [{image_file_directory}]
+
+Search {image_file_directory} for an RPi OS image file matching |OS_VERSION|
+and mount it inside a Docker container.
+
+If no {image_file_directory} is given, search the plugin's installation path.
+If no image matching |OS_VERSION| is found, try downloading it from |OS_IMAGE_URL|.
+
+==============================================================================
+REFERENCES                                                        *rpi-refs*
+
+                                                                *Vundle.vim*
+  https://github.com/VundleVim/Vundle.vim#quick-start
+
+                                                                  *vim-plug*
+  https://github.com/junegunn/vim-plug#installation
+
+==============================================================================
+ACKNOWLEDGEMENTS                                              *rpi-3rdparty*
+
+This plugin uses the lukechilds/dockerpi Docker image to mount RPi OS images.
+
+lukechilds/dockerpi (c) 2017 Luke Childs, MIT License, https://github.com/lukechilds/dockerpi
+
+=============================================================================
+vim:tw=78:noet:ft=help:norl:

@@ -3,8 +3,8 @@
 ""    License:    https://github.com/rdipardo/rpi-vim/blob/main/LICENSE
 "" ==========================================================================
 
-if get(g:, 'rpi_vim_dev_autoloaded') | finish | endif
-let g:rpi_vim_dev_autoloaded = 1
+if get(g:, 'rpi#plugin#autoloaded') | finish | endif
+let g:rpi#plugin#autoloaded = 1
 
 let s:job_options = {
   \   'out_io': 'buffer',
