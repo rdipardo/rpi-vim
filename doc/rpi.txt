@@ -134,6 +134,21 @@ the root of your project's source directory.
   URL where |OS_VERSION| is hosted
   Default: 'https://downloads.raspberrypi.org/raspios_lite_arm64/images/raspios_lite_arm64-2022-01-28'
 
+                                                                 *RPI_BOARD*
+  Model number of the board to virtualize
+  Default: 'pi3'
+
+  NOTE
+  Valid options are: 'pi1', 'pi2', 'pi3' or '' (empty).
+  If the model number is empty, and |OS_VERSION| targets `armhf`, the image is
+  mounted to a virtual ARM Versatile board by default.
+
+  See:
+>
+    https://github.com/lukechilds/dockerpi#which-machines-are-supported
+    https://www.qemu.org/docs/master/system/arm/versatile.html
+<
+
                                                                   *SSH_HOST*
   User and host name of the RPi's SSH server
   Default: 'pi@localhost'

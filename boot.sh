@@ -9,6 +9,18 @@ set -e
   IMG="$OS_VERSION" || \
   IMG='2022-01-28-raspios-bullseye-arm64-lite'
 
+[ "$RPI_BOARD" ] && BOARD="$RPI_BOARD"
+[ -z "$BOARD" ] && \
+  [ "$(echo "$IMG" | grep -c arm64)" -eq 1 ] && BOARD=pi3
+
+case "$BOARD" in
+  '' | 'pi1' | 'pi2' | 'pi3' ) ;;
+  *)
+    echo "Invalid RPi board type: '$BOARD'"
+    exit 1
+    ;;
+esac
+
 no_builtin_user() {
   echo
   echo '=================================================================================='
@@ -46,4 +58,4 @@ docker run \
   -it \
   --net=host \
   -v "$(pwd)/$IMG.img":/sdcard/filesystem.img \
-  lukechilds/dockerpi:vm pi3
+  lukechilds/dockerpi:vm "$BOARD"
