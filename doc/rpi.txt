@@ -41,11 +41,15 @@ CONTENTS                                                 *rpi-contents*
 ==============================================================================
 REQUIREMENTS                                              *rpi-requirements*
 
-* Debian or Ubuntu distro
-* docker CLI: https://docs.docker.com/engine/install
 * rsync
+
+To mount an RPi image from inside Vim, you will also need:
+
+* the Docker CLI: https://docs.docker.com/engine/install
+* curl
 * unzip
-* xz-utils
+* xz-utils (DEB distros)
+* xz       (RPM distros)
 
 ==============================================================================
 INSTALLATION                                              *rpi-installation*

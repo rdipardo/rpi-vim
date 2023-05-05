@@ -21,6 +21,38 @@ case "$BOARD" in
     ;;
 esac
 
+DISTRO=
+PKG_CMD='apt install -y'
+XZ_INSTALL_CMD="$PKG_CMD xz-utils"
+XZ_ARGS='-vT0'
+
+if [ -f '/etc/os-release' ]; then
+  DISTRO="$(awk '/^ID=.*$/ { gsub(/"/,"",$0);
+                             gsub(/[\x2D ].*$/,"",$0);
+                             print(tolower(substr($0,4))) }' /etc/os-release)"
+fi
+
+case "$DISTRO" in
+  'alpine' )
+    PKG_CMD='apk add'
+    XZ_INSTALL_CMD="$PKG_CMD xz"
+    XZ_ARGS=
+    ;;
+  'arch' | 'manjaro' )
+    PKG_CMD='pacman -Sy'
+    XZ_INSTALL_CMD="$PKG_CMD xz"
+    ;;
+  'almalinux' | 'centos' | 'fedora' | 'rocky' )
+    PKG_CMD='dnf install -y'
+    XZ_INSTALL_CMD="$PKG_CMD xz"
+    ;;
+  'opensuse' )
+    PKG_CMD='zypper install -y'
+    XZ_INSTALL_CMD="$PKG_CMD xz"
+    ;;
+  *) ;;
+esac
+
 no_builtin_user() {
   echo
   echo '=================================================================================='
@@ -41,13 +73,15 @@ if ! [ -f "$IMG.img" ]; then
   echo Fetching "$IMG" . . .
   if [ "$HAS_BUILTIN_USER" = 'false' ]; then
       no_builtin_user
-      test -f "$(command -v unxz)" || sudo apt install xz-utils -y
-      test -f "$IMG.img.xz" || curl -JLO ${IMG_URL}/${IMG}.img.xz
-      unxz -vT0 ${IMG}.img.xz
+      test -f "$(command -v curl)" || ${PKG_CMD} curl
+      test -f "$(command -v unxz)" || ${XZ_INSTALL_CMD}
+      test -f "$IMG.img.xz" || curl -JLO "$IMG_URL/$IMG.img.xz"
+      # shellcheck disable=SC2086
+      unxz ${XZ_ARGS} "$IMG.img.xz"
   else
-      test -f "$(command -v unzip)" || sudo apt install unzip -y
-      test -f "$IMG.zip" || curl -JLO ${IMG_URL}/${IMG}.zip
-      unzip ${IMG}.zip
+      test -f "$(command -v unzip)" || ${PKG_CMD} unzip
+      test -f "$IMG.zip" || curl -JLO "$IMG_URL/$IMG.zip"
+      unzip "$IMG.zip"
   fi
 fi
 
