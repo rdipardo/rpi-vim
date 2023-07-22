@@ -20,7 +20,7 @@ if [ "$2" = 'all' ]; then
     BIN="$BIN/asm-make"
   fi
 else
-  (echo "${1##*.}" | grep -Eq '^c[px]{,2}$') && BIN="$BIN/asm-cc" || BIN="$BIN/asm"
+  (echo "${1##*.}" | grep -Eqi '^c[px]{,2}$') && BIN="$BIN/asm-cc" || BIN="$BIN/asm"
 fi
 
 ssh $SSH_PARAMS -Tq -p "$PORT" "$SRV" \

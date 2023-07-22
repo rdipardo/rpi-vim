@@ -1,6 +1,6 @@
 #!/bin/sh
-if [ "$(echo "${1##*.}" | grep -Ec '^c$')" -ne 0 ];then
+if [ "$(echo "${1##*.}" | grep -Eci '^c$')" -ne 0 ];then
   gcc -Wall -Wextra -fno-common $CFLAGS -c "$1"
-elif [ "$(echo "${1##*.}" | grep -Ec '^c[px]{2}$')" -ne 0 ]; then
+elif [ "$(echo "${1##*.}" | grep -Eci '^c[px]{2}$')" -ne 0 ]; then
   g++ -Wall -Wextra $CXXFLAGS -c "$1"
 fi

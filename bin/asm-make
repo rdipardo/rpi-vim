@@ -1,6 +1,6 @@
 #!/bin/sh -e
-find . -type f -name \*.s -print0 \
+find . -type f -iname \*.s -print0 \
 | xargs -P4 -0I% "$(dirname "$0")/asm" %
-find . -type f \( -name \*.c -o -name \*.cxx -o -name \*.cpp \) -print0 \
+find . -type f \( -iname \*.c -o -iname \*.cxx -o -iname \*.cpp \) -print0 \
 | xargs -P4 -0I% "$(dirname "$0")/asm-cc" %
 gcc -o "${1%%.*}" ./*.o $LDFLAGS
