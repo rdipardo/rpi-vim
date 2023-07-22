@@ -3,7 +3,7 @@ set -e
 [ -f .env ] && eval "$(cat .env)"
 [ "$SSH_PORT" ] && PORT="$SSH_PORT" || PORT=5022
 [ "$SSH_HOST" ] && SRV="$SSH_HOST" || SRV='pi@localhost'
-[ "$WORK_DIR" ] && WORK_DIR="$WORK_DIR" || WORK_DIR='~'
+[ "$WORK_DIR" ] && PATH_ROOT="$WORK_DIR" || PATH_ROOT='~'
 [ "$1" ] && [ -z "$KEY_FILE" ] && KEY_FILE="$1" || KEY_FILE=~/.ssh/rpi_vm
 [ "$2" ] && [ -z "$SSH_PASSWORD" ] && SSH_PASSWORD="$2" || SSH_PASSWORD=
 
@@ -24,10 +24,10 @@ EOF
 ) >> ~/.ssh/config
 fi
 
-ssh-copy-id -i "${KEY_FILE}.pub" -p$PORT $SRV
+ssh-copy-id -i "${KEY_FILE}.pub" -p"$PORT" "$SRV"
 touch .hushlogin # https://stackoverflow.com/a/3763539
 rsync -v -e="ssh -p$PORT" .hushlogin "$SRV:~"
 rsync -v -e="ssh -p$PORT" "${RPI_VIM_HOME:-.}/"bin/* "$SRV:~/bin/"
 # shellcheck disable=SC2086
-ssh $SSH_PARAMS -Tq -p "$PORT" "$SRV" "mkdir -p $WORK_DIR"
+ssh $SSH_PARAMS -Tq -p "$PORT" "$SRV" "chmod -R 755 ~/bin/ && mkdir -p $PATH_ROOT"
 rm .hushlogin

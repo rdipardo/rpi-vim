@@ -1,0 +1,3 @@
+#!/bin/sh -e
+"$(dirname "$0")/asm" "$1"
+ld -o "${1%%.*}" "${1%.[sS]}.o" $LDFLAGS

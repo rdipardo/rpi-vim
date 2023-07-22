@@ -17,7 +17,7 @@ if [ "$2" = 'all' ]; then
     CXXFLAGS=
     LDFLAGS=
   else
-    BIN="$BIN/asm-make"
+    (echo "${1##*.}" | grep -Eqi '^s$') && BIN="$BIN/asm-ld" || BIN="$BIN/asm-make"
   fi
 else
   (echo "${1##*.}" | grep -Eqi '^c[px]{,2}$') && BIN="$BIN/asm-cc" || BIN="$BIN/asm"

@@ -4,7 +4,7 @@
 "" ==========================================================================
 
 if get(g:, 'rpi#plugun#loaded') | finish | endif
-let g:rpi#plugun#version = '1.1.0'
+let g:rpi#plugun#version = '1.1.1'
 let g:rpi#plugun#loaded = 1
 
 if !exists(':RPiCompile')
