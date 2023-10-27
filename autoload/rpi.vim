@@ -43,9 +43,12 @@ func! rpi#Compile(...) abort
   if has('channel')
     let job = job_start(cmd, s:job_options)
     exec 'sbuf ' . ch_getbufnr(job, 'out')
+  elseif has('nvim')
+    exec 'sp term://' . cmd
   else
     exec '!\' . cmd
   endif
+  exec 'wincmd k'
 endfunc
 
 func! rpi#Run() abort
@@ -60,9 +63,12 @@ func! rpi#Run() abort
   if has('channel')
     let job = job_start(cmd, s:job_options)
     exec 'sbuf ' . ch_getbufnr(job, 'out')
+  elseif has('nvim')
+    exec 'sp term://' . cmd
   else
     exec '!\' . cmd
   endif
+  exec 'wincmd k'
 endfunc
 
 func! rpi#Init(...) abort
@@ -73,7 +79,7 @@ func! rpi#Init(...) abort
   let verb = get(a:, 1, '')
 
   let scripts = {
-    \ 'boot': '/boot.sh',
+    \ 'boot': '/boot.sh ' . expand(get(a:, 2, plugin_dir)),
     \ 'setup':
     \   '/setup.sh ' . expand(get(a:, 2, '')) . ' ' . get(a:, 3, '')
     \ }
@@ -99,12 +105,30 @@ func! rpi#Init(...) abort
     return
   endif
 
-  if has('terminal')
-    let bufnr = term_start(cmd, term_options)
-    if bufnr > 0 && verb ==# 'boot'
+  func! s:ShowBootWnd(state, bufnr) abort
+    if a:state > 0
        echom 'RPi VM started.'
        let switch = input('Switch to VM window now? [y/n] ')
-       if switch =~? '^y' | exec 'sbuf ' . bufnr | endif
+       if switch =~? '^y' | exec 'sbuf ' . a:bufnr | endif
+    endif
+  endfunc
+
+  if has('terminal')
+    let bufnr = term_start(cmd, term_options)
+    if verb ==# 'boot'
+      call s:ShowBootWnd(bufnr, bufnr)
+    endif
+  elseif has('nvim')
+    unlet term_options.norestore
+    unlet term_options.term_kill
+    let term_options.detach = 1
+    let bufnr = nvim_create_buf(v:true, v:false)
+    exec 'sbuf ' . bufnr
+    let term = termopen(split(cmd), term_options)
+    setl nomodified
+    if verb ==# 'boot'
+      exec 'hide'
+      call s:ShowBootWnd(term, bufnr)
     endif
   elseif verb !=# 'boot'
     exec '!\' . cmd
@@ -112,4 +136,5 @@ func! rpi#Init(...) abort
     echom 'Open a new terminal and run'
     echom '$ ' . cmd
   endif
+  exec 'wincmd k'
 endfunc
