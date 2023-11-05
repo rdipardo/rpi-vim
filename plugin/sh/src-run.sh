@@ -1,5 +1,6 @@
 #!/bin/sh
-[ -f .env ] && eval "$(cat .env)"
+# shellcheck source=load_env.sh
+RPI_ENV_PATH="$(dirname "$1")" . "$(dirname "$0")/../../load_env.sh"
 [ "$SSH_PORT" ] && PORT="$SSH_PORT" || PORT=5022
 [ "$SSH_HOST" ] && SRV="$SSH_HOST" || SRV='pi@localhost'
 [ "$WORK_DIR" ] && WORK_DIR="$WORK_DIR" || WORK_DIR='~'

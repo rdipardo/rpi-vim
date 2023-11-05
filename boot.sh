@@ -1,6 +1,9 @@
 #!/bin/sh
 set -e
-[ -f .env ] && eval "$(cat .env)"
+# shellcheck source=load_env.sh
+. "$(dirname "$0")/load_env.sh"
+cd "${1:-$RPI_VIM_HOME}"
+
 [ "$OS_IMAGE_URL" ] && \
   IMG_URL="$OS_IMAGE_URL" || \
   IMG_URL='https://downloads.raspberrypi.org/raspios_lite_arm64/images/raspios_lite_arm64-2022-01-28'
