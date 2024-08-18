@@ -3,9 +3,6 @@
 . "$(dirname "$0")/src-cp.sh"
 
 [ -f .cflags ] && eval "$(cat .cflags)"
-[ "$CFLAGS" ] && CFLAGS="$CFLAGS"
-[ "$CXXFLAGS" ] && CXXFLAGS="$CXXFLAGS"
-[ "$LDFLAGS" ] && LDFLAGS="$LDFLAGS"
 BIN="/home/${SRV%@*}/bin"
 ARG=$(basename "$1")
 
