@@ -18,8 +18,12 @@ func! s:GetPluginRoot() abort
   let root = globpath(&rtp, '**/rpi-vim', 0, 0)
   if empty(root)
     let root = expand('<sfile>:p:h')
+    for path in split(&rtp, ',')
+      if path =~# '\/rpi-vim$' | let root = path | endif
+    endfor
     if !isdirectory(root . '/plugin/sh')
-      echoerr 'The rpi-vim plugin is not in any path that Vim can find!'
+      echoerr 'The rpi-vim plugin is not in any path that ' .
+        \ (has('nvim') ? 'Neovim' : 'Vim') . ' can find!'
     endif
   endif
   return expand(root)

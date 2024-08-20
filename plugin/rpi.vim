@@ -3,9 +3,9 @@
 ""    License:    https://github.com/rdipardo/rpi-vim/blob/main/LICENSE
 "" ==========================================================================
 
-if get(g:, 'rpi#plugun#loaded') | finish | endif
-let g:rpi#plugun#version = '1.2.1'
-let g:rpi#plugun#loaded = 1
+if get(g:, 'rpi#plugin#loaded') | finish | endif
+let g:rpi#plugin#version = '1.2.1'
+let g:rpi#plugin#loaded = 1
 
 if !exists(':RPiCompile')
   com! -nargs=* RPiCompile :call rpi#Compile(<f-args>)

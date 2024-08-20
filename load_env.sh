@@ -4,7 +4,7 @@ set -e
 RPI_ENV_FOUND=0
 RPI_CFLAGS_FOUND=0
 while [ $RPI_ENV_FOUND -ne 1 ] && [ -d "$ENV_PATH" ] &&\
-      { ! [ -d '.git' ] || [ -d '.hg' ] || [ -d '.svn' ]; }
+      ! { [ -d '.git' ] || [ -d '.hg' ] || [ -d '.svn' ]; }
 do
     cd "$ENV_PATH" || exit 0
     # local configs take precedence
